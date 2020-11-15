@@ -1,5 +1,7 @@
 package org.mantra;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 
 public class ColorRole {
@@ -30,6 +32,11 @@ public class ColorRole {
 		return pro;
 	}
 
+	public void applyTo(Member member, Guild guild) 
+	{
+		guild.addRoleToMember(member, getRole()).queue();
+	}
+	
 	public void setPro(boolean pro) {
 
 		update();

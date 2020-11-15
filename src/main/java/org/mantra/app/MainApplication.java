@@ -42,7 +42,7 @@ public class MainApplication {
 			{
 				JDA jda = event.getJDA();
 				jda.getPresence().setPresence(OnlineStatus.DO_NOT_DISTURB, Activity.of(ActivityType.WATCHING, PRESENCE));
-				setupColors(jda);
+				setupColorSystem(jda);
 				
 			}
 
@@ -53,10 +53,14 @@ public class MainApplication {
 		jdaBuilder.build();
 	}
 	
-	private static void setupColors(JDA jda) {
+	private static void setupColorSystem(JDA jda) {
 		
 		
 		ColorTagListener tagsListener = new ColorTagListener(SOCIEDADE_SECRETA_GUILD_ID, jda);
+
+		tagsListener.addProRoles("Membro da Staff");
+		tagsListener.addProRoles("Server Booster");
+		tagsListener.addProRoles(767283598918418445L); //Caçador de recompensas.
 		
 		jda.addEventListener(tagsListener);
 
@@ -87,6 +91,11 @@ public class MainApplication {
 			return developerUser.getEffectiveAvatarUrl();
 		}
 		return "";
+	}
+	
+	public static String getSelfAvatar(JDA jda) 
+	{
+		return jda.getSelfUser().getEffectiveAvatarUrl();
 	}
 
 	public static JSONBundle getTokenBundle() throws IOException, Exception 

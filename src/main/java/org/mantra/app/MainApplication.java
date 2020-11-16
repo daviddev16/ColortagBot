@@ -64,9 +64,11 @@ public class MainApplication {
 		
 		jda.addEventListener(tagsListener);
 
+		tagsListener.addColor("Branco").setPro(true);
 		tagsListener.addColor("Azul 1");
 		tagsListener.addColor("Azul 2");
-		tagsListener.addColor("Ciano");
+		tagsListener.addColor("Ciano 1");
+		tagsListener.addColor("Ciano 2").setPro(true);
 		tagsListener.addColor("Verde 1");
 		tagsListener.addColor("Verde 2").setPro(true);
 		tagsListener.addColor("Verde 3").setPro(true);
@@ -79,8 +81,10 @@ public class MainApplication {
 		tagsListener.addColor("Vermelho 2").setPro(true);
 		tagsListener.addColor("Rosa 1");
 		tagsListener.addColor("Rosa 2");
+		tagsListener.addColor("Rosa 3").setPro(true);
 		tagsListener.addColor("Violeta").setPro(true);
 		tagsListener.addColor("Roxo");
+		tagsListener.addColor("Preto").setPro(true);
 
 	}
 	

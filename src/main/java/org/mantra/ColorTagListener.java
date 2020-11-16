@@ -252,8 +252,8 @@ public class ColorTagListener extends ListenerAdapter {
 			else if(content.equalsIgnoreCase("Limpar")) 
 			{
 				clearMember(event.getMember());
+				message.delete().queue();
 			}
-
 
 			return;
 		}

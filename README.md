@@ -1,10 +1,18 @@
+
+![Test Version](https://img.shields.io/static/v1?label=Alpha&message=Versão-de-Teste&color=red)
+
 # ColortagBot
 
 ColortagBot permite que os usuarios possam trocar a cor de seus respectivos nomes.
 Esse codigo é implementado no bot _"Yeti"_ do servidor **Sociedade Secreta** no discord.
-Sinta-se a vontade para testar o Bot la no servidor:
 
+# Aviso Rapido
+Este bot está em versão de testes, o codigo foi feito as presas, então é bem provavel que eu volte a atualizar/limpar/otimizar o codigo dele.
+
+Sinta-se a vontade para testar o Bot la no servidor:
 - [Você pode acessar o servidor clicando aqui!](https://discord.gg/nYsxdeS)
+
+<h3>Exemplo</h3>
 
 ![Embed Example](https://i.imgur.com/mk73els.png)
 
@@ -29,3 +37,7 @@ Estes comando apenas podem ser utilizados no chat cujo o id está definido como 
 + Sugestões podem ser adicionadas na aba Issues.
 + Os comandos não são oficiais, Ou seja, não pertence a qualquer sistema de gerenciamento de comando, eles funcionam apenas por leitura rapida da mensagem.
 - Não sei se pretendo modificar muita coisa ou ampliar este sistema, então não contem com atualizações grandes.
+
+- [Servidor Sociedade Secreta](https://discord.gg/nYsxdeS)
+
+![Embed Example](https://i.imgur.com/LrxZa9G.png)

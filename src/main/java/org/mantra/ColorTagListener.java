@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.role.update.RoleUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class ColorTagListener extends ListenerAdapter {
@@ -41,7 +40,7 @@ public class ColorTagListener extends ListenerAdapter {
 
 	public ColorRole addColor(String colorRoleName) {
 
-		ColorRole colorRole = new ColorRole(findRoleByName(colorRoleName));
+		ColorRole colorRole = new ColorRole(findShortRoleByName(colorRoleName));
 		colorRoles.add(colorRole);
 
 		return colorRole;
@@ -56,7 +55,17 @@ public class ColorTagListener extends ListenerAdapter {
 		}
 		return null;
 	}
-	
+
+	private Role findShortRoleByName(String name) {
+
+		for(Role role : getGuild().getRoles()) {
+			if(role.getName().toLowerCase().startsWith(name.toLowerCase().trim())) {
+				return role;
+			}
+		}
+		return null;
+	}
+
 	private Role findRoleById(long id) {
 
 		for(Role role : getGuild().getRoles()) {
@@ -82,13 +91,13 @@ public class ColorTagListener extends ListenerAdapter {
 
 		EmbedBuilder builder = new EmbedBuilder()
 				.setTitle("Cores disponiveis:")
-				.setAuthor("Daviiiddev", "https://github.com/daviddev16", MainApplication.getDeveloperIcon(getJDA()))
+				.setAuthor("Criado por Daviiiddev", "https://github.com/daviddev16", MainApplication.getDeveloperIcon(getJDA()))
 				.setDescription("Todas as cores:")
 				.setThumbnail(MainApplication.getSelfAvatar(getJDA()))
 				.setColor(Color.cyan.brighter().brighter());
 
-		builder.addField("Como conseguir?", "", true);
-		builder.addField(" - Digite: ", "Usar <color>", false);
+		builder.addField("Usar Cor:", "Usar **(Marque a Cor)**", false);
+		builder.addField("Limpar:", "Limpar", false);
 
 		StringBuffer buffer = new StringBuffer();
 		for (ColorRole colorRole : colorRoles) {
@@ -96,16 +105,16 @@ public class ColorTagListener extends ListenerAdapter {
 
 		}
 
-		StringJoiner joiner = new StringJoiner(" ,");
+		StringJoiner joiner = new StringJoiner(" ");
 		for(Role accRoles : proAcceptedRoles) {
-			joiner.add(accRoles.getAsMention());
+			joiner.add("[" + accRoles.getAsMention() + "]");
 		}
 
 		buffer.trimToSize();
-		builder.addField("Colors", buffer.toString(), false);
-		
+		builder.addField("Cores:", buffer.toString(), false);
 		builder.addField("Usuarios PRO:", joiner.toString(), false);
-		
+		builder.setFooter("O comando \"Usar\" apenas funciona neste chat.", MainApplication.getSelfAvatar(getJDA()));
+
 		channel.sendMessage(builder.build()).queue();
 	}
 
@@ -116,7 +125,7 @@ public class ColorTagListener extends ListenerAdapter {
 	public List<ColorRole> getColorRoles() {
 		return colorRoles;
 	}
-	
+
 	public void addProRoles(String name) 
 	{
 		getProAcceptedRoles().add(findRoleByName(name));
@@ -125,7 +134,7 @@ public class ColorTagListener extends ListenerAdapter {
 	{
 		getProAcceptedRoles().add(findRoleById(id));
 	}
-	
+
 	public boolean hasAccessToPro(Role role) 
 	{
 		for(Role accRole : getProAcceptedRoles()) {
@@ -135,7 +144,28 @@ public class ColorTagListener extends ListenerAdapter {
 		}
 		return false;
 	}
-	
+
+	public boolean isAnColor(Role role) 
+	{
+		for(ColorRole colorRole : colorRoles) {
+			if(colorRole.getRole().getIdLong() == role.getIdLong()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void clearMember(Member member) 
+	{
+		for(Role memberRoles : member.getRoles()) 
+		{
+			if(isAnColor(memberRoles)) 
+			{
+				getGuild().removeRoleFromMember(member, memberRoles).queue();
+			}
+		}
+	}
+
 	public boolean hasPermission(Member member) 
 	{
 		return member.getRoles().stream().anyMatch(r -> hasAccessToPro(r));
@@ -157,6 +187,7 @@ public class ColorTagListener extends ListenerAdapter {
 			if(content.equalsIgnoreCase("(criarEmbed)")) 
 			{
 				generateEmbed(event.getChannel());
+				message.delete().queue();
 
 			}
 			else if(content.startsWith("Usar"))
@@ -166,18 +197,20 @@ public class ColorTagListener extends ListenerAdapter {
 				if(!mentionedRoles.isEmpty()) {
 
 					ColorRole colorRole = findColor(mentionedRoles.get(0));
-					
+
 					if(colorRole != null)
 					{
-						
+
 						if(!colorRole.isPro()) 
 						{
+							clearMember(event.getMember());
 							colorRole.applyTo(event.getMember(), getGuild());
 						}
 						else 
 						{
 							if (hasPermission(event.getMember())) 
 							{
+								clearMember(event.getMember());
 								colorRole.applyTo(event.getMember(), getGuild());
 							}
 							else
@@ -190,7 +223,7 @@ public class ColorTagListener extends ListenerAdapter {
 								});
 							}
 						}
-						
+
 					}
 					else 
 					{
@@ -201,7 +234,7 @@ public class ColorTagListener extends ListenerAdapter {
 							}
 						});
 					}
-					
+
 				}
 				else 
 				{
@@ -212,23 +245,17 @@ public class ColorTagListener extends ListenerAdapter {
 						}
 					});
 				}
+				if(!event.getMember().isOwner()) {
+					message.delete().queue();
+				}
+			}
+			else if(content.equalsIgnoreCase("Limpar")) 
+			{
+				clearMember(event.getMember());
 			}
 
-			message.delete().queue();
+
 			return;
-		}
-
-	}
-
-	/*JDA Listener*/
-	public void onRoleUpdateName(RoleUpdateNameEvent event) {
-
-		if(event.getEntity() != null) {
-
-			ColorRole colorRole = findColor(event.getEntity());
-			if(colorRole != null) {
-				colorRole.update();
-			}
 		}
 
 	}

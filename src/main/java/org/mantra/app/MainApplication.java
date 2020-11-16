@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 /* Oficial Guild -> https://discord.gg/nYsxdeS */
 public class MainApplication {
 
-	public static String PRESENCE = " o servidor | Bot open-source github.com/daviddev16/ColortagBot";
+	public static String PRESENCE = " Ao Servidor | open-source github.com/daviddev16/ColortagBot";
 	
 	public static final long DEVELOPER_USER_ID = 339978701297156098L;
 
@@ -65,7 +65,7 @@ public class MainApplication {
 		jda.addEventListener(tagsListener);
 
 		tagsListener.addColor("Azul 1");
-		tagsListener.addColor("Azul 2").setPro(true);
+		tagsListener.addColor("Azul 2");
 		tagsListener.addColor("Ciano");
 		tagsListener.addColor("Verde 1");
 		tagsListener.addColor("Verde 2").setPro(true);

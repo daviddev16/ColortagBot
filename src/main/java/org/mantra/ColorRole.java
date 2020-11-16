@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.Role;
 public class ColorRole {
 
 	public static String PRO_TAG = "[PRO]";
+	
+	public static String FREE_TAG = "[FREE]";
 
 	private boolean pro = false;
 
@@ -14,41 +16,28 @@ public class ColorRole {
 
 	public ColorRole(Role role) {
 		this.role = role;
-		update();
-	}
-
-	public void update() {
-
-		if (this.role.getName().endsWith(PRO_TAG)) {
-			pro = true;
-			return;
-		}
-
-		pro = false;
-
+		this.pro = false;
 	}
 
 	public boolean isPro() {
 		return pro;
 	}
 
-	public void applyTo(Member member, Guild guild) 
-	{
+	public void applyTo(Member member, Guild guild) {
 		guild.addRoleToMember(member, getRole()).queue();
 	}
-	
+
 	public void setPro(boolean pro) {
-
-		update();
-
-		if (pro) {
-			role.getManager().setName(role.getName() + " " + PRO_TAG).queue();
-		} else {
-			role.getManager().setName(role.getName().substring(0, role.getName().length() - (" " + PRO_TAG).length()))
-					.queue();
-		}
-
 		this.pro = pro;
+		updateName();
+	}
+
+	public void updateName() {
+		if (isPro()) {
+			getRole().getManager().setName(getOriginalName() + " " + PRO_TAG).queue();
+			return;
+		}
+		getRole().getManager().setName(getOriginalName() + " " + FREE_TAG).queue();
 	}
 
 	public Role getRole() {
@@ -57,6 +46,15 @@ public class ColorRole {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public String getOriginalName() {
+		if (getRole().getName().endsWith(PRO_TAG)) {
+			int nameWithoutTagEnd = role.getName().lastIndexOf('[') - 1;
+			return role.getName().substring(0, nameWithoutTagEnd).trim();
+		} else {
+			return role.getName().trim();
+		}
 	}
 
 }

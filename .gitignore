@@ -58,6 +58,7 @@ local.properties
 
 # Compiled class file
 *.class
+*.bat
 
 # Log file
 *.log
